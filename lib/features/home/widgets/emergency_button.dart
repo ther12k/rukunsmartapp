@@ -5,7 +5,7 @@ import 'package:rukunsmart/features/emergency/bloc/emergency_event.dart';
 import 'package:rukunsmart/features/emergency/bloc/emergency_state.dart';
 
 class EmergencyButton extends StatelessWidget {
-  const EmergencyButton({Key? key}) : super(key: key);
+  const EmergencyButton({super.key});
 
   @override
   Widget build(BuildContext context) {
