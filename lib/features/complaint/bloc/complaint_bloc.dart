@@ -1,29 +1,46 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'complaint_event.dart';
-import 'complaint_state.dart';
+import 'package:rukunsmart/features/complaint/bloc/complaint_event.dart';
+import 'package:rukunsmart/features/complaint/bloc/complaint_state.dart';
+import '../repositories/complaint_repository.dart';
 
 class ComplaintBloc extends Bloc<ComplaintEvent, ComplaintState> {
-  ComplaintBloc() : super(ComplaintInitial()) {
-    on<SubmitComplaint>(_onSubmitComplaint);
-    on<ResetComplaint>(_onResetComplaint);
+  final ComplaintRepository _complaintRepository;
+
+  ComplaintBloc(
+    ComplaintRepository complaintRepository, {
+    ComplaintInitial? initialState,
+  })  : _complaintRepository = complaintRepository,
+        super(initialState ?? ComplaintInitial());
+
+  ComplaintBloc.withRepository(
+      {required ComplaintRepository complaintRepository})
+      : _complaintRepository = complaintRepository,
+        super(ComplaintInitial()) {
+    on<PostComplaint>(_onPostComplaint);
+    on<FetchComplaints>(_onFetchComplaints);
   }
 
-  Future<void> _onSubmitComplaint(
-      SubmitComplaint event, Emitter<ComplaintState> emit) async {
-    emit(ComplaintSubmitting());
+  Future<void> _onPostComplaint(
+      PostComplaint event, Emitter<ComplaintState> emit) async {
+    emit(ComplaintLoading());
     try {
-      // Simulating API call delay for submitting a complaint
-      await Future.delayed(const Duration(seconds: 3));
-
-      // Assume the submission is successful, transition to ComplaintSubmitted state
-      emit(ComplaintSubmitted());
+      final complaint =
+          await _complaintRepository.postComplaint(event.description);
+      emit(ComplaintPostSuccess(complaint));
+      add(FetchComplaints()); // Refresh the list after posting
     } catch (e) {
-      // If there's an error, emit the ComplaintError state with an error message
-      emit(const ComplaintError('Failed to submit the complaint.'));
+      emit(ComplaintPostFailure(e.toString()));
     }
   }
 
-  void _onResetComplaint(ResetComplaint event, Emitter<ComplaintState> emit) {
-    emit(ComplaintInitial());
+  Future<void> _onFetchComplaints(
+      FetchComplaints event, Emitter<ComplaintState> emit) async {
+    emit(ComplaintLoading());
+    try {
+      final complaints = await _complaintRepository.fetchComplaints();
+      emit(ComplaintsFetchSuccess(complaints));
+    } catch (e) {
+      emit(ComplaintsFetchFailure(e.toString()));
+    }
   }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rukunsmart/features/finance/bloc/finance_event.dart';
 import 'package:rukunsmart/features/finance/bloc/finance_state.dart';
-import 'package:rukunsmart/features/finance/models/transaction_model.dart';
+import 'package:rukunsmart/features/finance/repositories/finance_repository.dart';
 
 class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
-  FinanceBloc() : super(FinanceInitial()) {
+  final FinanceRepository financeRepository;
+
+  FinanceBloc(this.financeRepository) : super(FinanceInitial()) {
     on<LoadFinanceData>(_onLoadFinanceData);
     on<AddTransaction>(_onAddTransaction);
   }
@@ -13,26 +15,18 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
       LoadFinanceData event, Emitter<FinanceState> emit) async {
     emit(FinanceLoading());
     try {
-      // TODO: Implement logic to fetch finance data
-      // For now, we'll use dummy data
-      await Future.delayed(
-          const Duration(seconds: 1)); // Simulate network delay
+      final transactions = await financeRepository.fetchTransactions();
+      double totalIncome = transactions
+          .where((transaction) => transaction.amount > 0)
+          .fold(0, (sum, item) => sum + item.amount);
+      double totalExpenses = transactions
+          .where((transaction) => transaction.amount < 0)
+          .fold(0, (sum, item) => sum + item.amount);
       emit(FinanceLoaded(
-        balance: 10000,
-        totalIncome: 15000,
-        totalExpenses: 5000,
-        transactions: [
-          Transaction(
-              id: '1',
-              amount: 1000,
-              description: 'Salary',
-              date: DateTime.now()),
-          Transaction(
-              id: '2',
-              amount: -500,
-              description: 'Groceries',
-              date: DateTime.now().subtract(const Duration(days: 1))),
-        ],
+        balance: totalIncome + totalExpenses,
+        totalIncome: totalIncome,
+        totalExpenses: totalExpenses,
+        transactions: transactions,
       ));
     } catch (e) {
       emit(FinanceError(e.toString()));
@@ -41,6 +35,6 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
 
   void _onAddTransaction(
       AddTransaction event, Emitter<FinanceState> emit) async {
-    // TODO: Implement logic to add a new transaction
+    // Implement logic to add a new transaction
   }
 }

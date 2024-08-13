@@ -1,5 +1,5 @@
-// States
 import 'package:equatable/equatable.dart';
+import 'package:rukunsmart/features/complaint/models/complaint_model.dart';
 
 abstract class ComplaintState extends Equatable {
   const ComplaintState();
@@ -10,15 +10,40 @@ abstract class ComplaintState extends Equatable {
 
 class ComplaintInitial extends ComplaintState {}
 
-class ComplaintSubmitting extends ComplaintState {}
+class ComplaintLoading extends ComplaintState {}
 
-class ComplaintSubmitted extends ComplaintState {}
+class ComplaintPostSuccess extends ComplaintState {
+  final Complaint complaint;
 
-class ComplaintError extends ComplaintState {
-  final String message;
-
-  const ComplaintError(this.message);
+  const ComplaintPostSuccess(this.complaint);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [complaint];
+}
+
+class ComplaintPostFailure extends ComplaintState {
+  final String error;
+
+  const ComplaintPostFailure(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+
+class ComplaintsFetchSuccess extends ComplaintState {
+  final List<Complaint> complaints;
+
+  const ComplaintsFetchSuccess(this.complaints);
+
+  @override
+  List<Object> get props => [complaints];
+}
+
+class ComplaintsFetchFailure extends ComplaintState {
+  final String error;
+
+  const ComplaintsFetchFailure(this.error);
+
+  @override
+  List<Object> get props => [error];
 }

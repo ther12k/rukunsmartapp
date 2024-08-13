@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:rukunsmart/features/home/widgets/announcement_card.dart';
-import 'package:rukunsmart/features/home/widgets/menu_grid.dart';
-import 'package:rukunsmart/features/home/widgets/region_info_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/announcement_card.dart';
+import '../widgets/menu_grid.dart';
+import '../widgets/region_info_card.dart';
+import '../../auth/bloc/auth_bloc.dart';
+import '../../finance/screens/finance_screen.dart';
+import '../../billing/screens/billing_screen.dart';
+import '../../news/screens/news_screen.dart';
+import '../widgets/emergency_button.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,22 +21,30 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Handle logout
+              context.read<AuthBloc>().add(AuthLogoutRequested());
             },
           ),
         ],
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AnnouncementCard(),
-              SizedBox(height: 16),
-              RegionInfoCard(),
-              SizedBox(height: 16),
-              MenuGrid(),
+              const AnnouncementCard(),
+              const SizedBox(height: 16),
+              const RegionInfoCard(),
+              const SizedBox(height: 16),
+              MenuGrid(
+                onFinanceDetailsTap: () =>
+                    _navigateToScreen(context, const FinanceScreen()),
+                onMonthlyBillsTap: () =>
+                    _navigateToScreen(context, const BillingScreen()),
+                onCommunityNewsTap: () =>
+                    _navigateToScreen(context, const NewsScreen()),
+                onEmergencyTap: () => _showEmergencyDialog(context),
+              ),
             ],
           ),
         ),
@@ -61,9 +75,44 @@ class HomeScreen extends StatelessWidget {
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.grey,
         onTap: (index) {
-          // Handle navigation
+          // TODO: Implement bottom navigation
         },
       ),
+    );
+  }
+
+  void _navigateToScreen(BuildContext context, Widget screen) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    );
+  }
+
+  void _showEmergencyDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Emergency'),
+          content: const Text(
+              'This is an emergency situation. Please confirm to proceed.'),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _navigateToScreen(context, const EmergencyButton());
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-// Events
 abstract class ComplaintEvent extends Equatable {
   const ComplaintEvent();
 
@@ -8,13 +7,13 @@ abstract class ComplaintEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SubmitComplaint extends ComplaintEvent {
-  final String complaintDetails;
+class PostComplaint extends ComplaintEvent {
+  final String description;
 
-  const SubmitComplaint(this.complaintDetails);
+  const PostComplaint(this.description);
 
   @override
-  List<Object> get props => [complaintDetails];
+  List<Object> get props => [description];
 }
 
-class ResetComplaint extends ComplaintEvent {}
+class FetchComplaints extends ComplaintEvent {}

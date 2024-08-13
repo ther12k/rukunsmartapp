@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rukunsmart/features/complaint/bloc/complaint_bloc.dart';
-import 'package:rukunsmart/features/complaint/bloc/complaint_event.dart';
 import 'package:rukunsmart/features/complaint/bloc/complaint_state.dart';
+import 'package:rukunsmart/features/complaint/widgets/complain_list.dart';
 import 'package:rukunsmart/features/complaint/widgets/complaint_form_widget.dart';
+import '../bloc/complaint_bloc.dart';
+import '../../../shared/widgets/loading_indicator.dart';
 
 class ComplaintScreen extends StatelessWidget {
   const ComplaintScreen({super.key});
@@ -11,39 +12,45 @@ class ComplaintScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Submit Complaint'),
-      ),
-      body: BlocBuilder<ComplaintBloc, ComplaintState>(
-        builder: (context, state) {
-          if (state is ComplaintInitial) {
-            return const ComplaintForm();
-          } else if (state is ComplaintSubmitting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is ComplaintSubmitted) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.green, size: 64),
-                  const SizedBox(height: 16),
-                  const Text('Complaint submitted successfully!'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<ComplaintBloc>().add(ResetComplaint());
-                    },
-                    child: const Text('Submit Another Complaint'),
-                  ),
-                ],
-              ),
+      appBar: AppBar(title: const Text('Complaints')),
+      body: BlocConsumer<ComplaintBloc, ComplaintState>(
+        listener: (context, state) {
+          if (state is ComplaintPostSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Complaint posted successfully')),
             );
-          } else if (state is ComplaintError) {
-            return Center(child: Text('Error: ${state.message}'));
+          } else if (state is ComplaintPostFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text('Failed to post complaint: ${state.error}')),
+            );
           }
-          return const SizedBox.shrink();
+        },
+        builder: (context, state) {
+          if (state is ComplaintLoading) {
+            return const Center(child: LoadingIndicator());
+          } else if (state is ComplaintsFetchSuccess) {
+            return ComplaintList(complaints: state.complaints);
+          } else if (state is ComplaintsFetchFailure) {
+            return Center(
+                child: Text('Failed to fetch complaints: ${state.error}'));
+          } else {
+            return const Center(
+                child: Text('Press the button to fetch complaints'));
+          }
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showComplaintDialog(context),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _showComplaintDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => const ComplaintFormDialog(),
     );
   }
 }

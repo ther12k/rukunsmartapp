@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 
 class MenuGrid extends StatelessWidget {
-  const MenuGrid({super.key});
+  final VoidCallback onFinanceDetailsTap;
+  final VoidCallback onMonthlyBillsTap;
+  final VoidCallback onCommunityNewsTap;
+  final VoidCallback onEmergencyTap;
+
+  const MenuGrid({
+    Key? key,
+    required this.onFinanceDetailsTap,
+    required this.onMonthlyBillsTap,
+    required this.onCommunityNewsTap,
+    required this.onEmergencyTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,31 +25,23 @@ class MenuGrid extends StatelessWidget {
         MenuCard(
           icon: Icons.account_balance_wallet,
           label: 'Finance Details',
-          onTap: () {
-            // Handle navigation
-          },
+          onTap: onFinanceDetailsTap,
         ),
         MenuCard(
           icon: Icons.receipt,
           label: 'Monthly Bills',
-          onTap: () {
-            // Handle navigation
-          },
+          onTap: onMonthlyBillsTap,
         ),
         MenuCard(
           icon: Icons.newspaper,
           label: 'Community News',
-          onTap: () {
-            // Handle navigation
-          },
+          onTap: onCommunityNewsTap,
         ),
         MenuCard(
           icon: Icons.warning,
           label: 'Emergency',
           color: Colors.red.shade100,
-          onTap: () {
-            // Handle emergency
-          },
+          onTap: onEmergencyTap,
         ),
       ],
     );
@@ -52,12 +55,12 @@ class MenuCard extends StatelessWidget {
   final Color? color;
 
   const MenuCard({
+    Key? key,
     required this.icon,
     required this.label,
     required this.onTap,
     this.color,
-    super.key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +78,7 @@ class MenuCard extends StatelessWidget {
             children: [
               Icon(icon, size: 36, color: Colors.purple),
               const SizedBox(height: 8),
-              Text(label, style: TextStyle(color: Colors.black)),
+              Text(label, style: const TextStyle(color: Colors.black)),
             ],
           ),
         ),

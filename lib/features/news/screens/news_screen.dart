@@ -7,7 +7,7 @@ import '../widgets/news_list_widget.dart';
 import '../../../shared/widgets/loading_indicator.dart';
 
 class NewsScreen extends StatelessWidget {
-  const NewsScreen({Key? key}) : super(key: key);
+  const NewsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

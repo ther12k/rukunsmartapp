@@ -1,10 +1,18 @@
-import 'package:rukunsmart/features/finance/models/transaction_model.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class FinanceEvent {}
+abstract class FinanceEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
 class LoadFinanceData extends FinanceEvent {}
 
 class AddTransaction extends FinanceEvent {
-  final Transaction transaction;
-  AddTransaction(this.transaction);
+  final double amount;
+  final String description;
+
+  AddTransaction(this.amount, this.description);
+
+  @override
+  List<Object?> get props => [amount, description];
 }
