@@ -10,55 +10,68 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('RukunSmart'),
+        title: const Text('RukunSmart',
+            style: TextStyle(fontFamily: 'Orbitron', fontSize: 24)),
+        backgroundColor: Colors.black,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
+            color: Colors.cyan,
             onPressed: () {
               // Handle logout
             },
           ),
         ],
       ),
-      body: const SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AnnouncementCard(),
-              SizedBox(height: 16),
-              RegionInfoCard(),
-              SizedBox(height: 16),
-              MenuGrid(),
-            ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Colors.deepPurple],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: const [
+                AnnouncementCard(),
+                SizedBox(height: 16),
+                RegionInfoCard(),
+                SizedBox(height: 16),
+                MenuGrid(),
+              ],
+            ),
           ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.black),
+            icon: Icon(Icons.home, color: Colors.cyan),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.contact_phone, color: Colors.black),
+            icon: Icon(Icons.contact_phone, color: Colors.cyan),
             label: 'Contact',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.warning, color: Colors.black),
+            icon: Icon(Icons.warning, color: Colors.redAccent),
             label: 'Emergency',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map, color: Colors.black),
+            icon: Icon(Icons.map, color: Colors.cyan),
             label: 'Regions',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.more_horiz, color: Colors.black),
+            icon: Icon(Icons.more_horiz, color: Colors.cyan),
             label: 'More',
           ),
         ],
-        selectedItemColor: Colors.purple,
+        selectedItemColor: Colors.deepPurple,
         unselectedItemColor: Colors.grey,
         onTap: (index) {
           // Handle navigation

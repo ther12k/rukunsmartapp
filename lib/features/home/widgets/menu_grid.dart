@@ -8,8 +8,8 @@ class MenuGrid extends StatelessWidget {
     return GridView.count(
       shrinkWrap: true,
       crossAxisCount: 2,
-      crossAxisSpacing: 8,
-      mainAxisSpacing: 8,
+      crossAxisSpacing: 12,
+      mainAxisSpacing: 12,
       children: [
         MenuCard(
           icon: Icons.account_balance_wallet,
@@ -35,7 +35,7 @@ class MenuGrid extends StatelessWidget {
         MenuCard(
           icon: Icons.warning,
           label: 'Emergency',
-          color: Colors.red.shade100,
+          color: Colors.red.shade400,
           onTap: () {
             // Handle emergency
           },
@@ -61,10 +61,17 @@ class MenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: color ?? Colors.purple.shade50,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
+    return Container(
+      decoration: BoxDecoration(
+        color: color ?? Colors.black87,
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.deepPurple.withOpacity(0.7),
+            blurRadius: 10.0,
+            spreadRadius: 2.0,
+          ),
+        ],
       ),
       child: InkWell(
         onTap: onTap,
@@ -73,9 +80,11 @@ class MenuCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 36, color: Colors.purple),
+              Icon(icon, size: 40, color: Colors.cyan),
               const SizedBox(height: 8),
-              Text(label, style: TextStyle(color: Colors.black)),
+              Text(label,
+                  style:
+                      TextStyle(color: Colors.white, fontFamily: 'Orbitron')),
             ],
           ),
         ),

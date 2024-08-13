@@ -6,23 +6,32 @@ class AnnouncementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12.0),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.purple.shade100,
-        borderRadius: BorderRadius.circular(12.0),
+        color: Colors.black87,
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.purpleAccent.withOpacity(0.7),
+            blurRadius: 10.0,
+            spreadRadius: 2.0,
+          ),
+        ],
       ),
       child: ListTile(
         title: Text(
           "PENYULUHAN CEGAH STUNTING DAN RESIKO TINGGI PADA IBU HAMIL RW 12",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
+            fontFamily: 'Orbitron',
           ),
         ),
-        subtitle: Text("9/4/2023 13:44 WIB"),
+        subtitle:
+            Text("9/4/2023 13:44 WIB", style: TextStyle(color: Colors.grey)),
         trailing: Icon(
           Icons.chevron_right,
-          color: Colors.black,
+          color: Colors.cyan,
         ),
         onTap: () {
           // Navigate to announcement details if needed
