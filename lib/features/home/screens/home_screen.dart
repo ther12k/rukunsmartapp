@@ -11,14 +11,18 @@ import '../../../features/auth/bloc/auth_bloc.dart';
 import '../../../features/news/screens/news_screen.dart';
 import '../../../features/complaint/screens/complaint_screen.dart';
 import '../../../features/billing/screens/billing_screen.dart';
-import '../../../features/finance/screens/finance_screen.dart'; // Import FinanceScreen
+import '../../../features/finance/screens/finance_screen.dart';
 import '../../../shared/widgets/custom_button.dart';
+import 'package:rukunsmart/features/billing/repositories/billing_repository.dart';
+import 'package:rukunsmart/features/news/repositories/news_repository.dart'; // Add this import
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final billingRepository = RepositoryProvider.of<BillingRepository>(context);
+    final newsRepository = RepositoryProvider.of<NewsRepository>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('RukunSmart'),
@@ -39,7 +43,6 @@ class HomeScreen extends StatelessWidget {
             children: [
               const RegionCard(),
               const SizedBox(height: 16),
-              const SizedBox(height: 16),
               CustomButton(
                 text: 'Submit Complaint',
                 onPressed: () {
@@ -47,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => BlocProvider(
-                        create: (context) => ComplaintBloc(), // Provide the required bloc
+                        create: (context) => ComplaintBloc(),
                         child: const ComplaintScreen(),
                       ),
                     ),
@@ -55,7 +58,6 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 8),
-              // Uncomment and add the Finance Details button
               CustomButton(
                 text: 'Finance Details',
                 onPressed: () {
@@ -63,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => BlocProvider(
-                        create: (context) => FinanceBloc(), // Provide the required bloc
+                        create: (context) => FinanceBloc(),
                         child: const FinanceScreen(),
                       ),
                     ),
@@ -71,37 +73,36 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 8),
-              // CustomButton(
-              //   text: 'Community News',
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => BlocProvider(
-              //           create: (context) => NewsBloc(), // Provide the required bloc
-              //           child: const NewsScreen(),
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
+              CustomButton(
+                text: 'Monthly Bills',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => BillingBloc(billingRepository),
+                        child: const BillingScreen(),
+                      ),
+                    ),
+                  );
+                },
+              ),
               const SizedBox(height: 8),
-              // CustomButton(
-              //   text: 'Monthly Bills',
-              //   onPressed: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => BlocProvider(
-              //           create: (context) => BillingBloc(), // Provide the required bloc
-              //           child: const BillingScreen(),
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
+              CustomButton(
+                text: 'Community News',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => NewsBloc(newsRepository),
+                        child: const NewsScreen(),
+                      ),
+                    ),
+                  );
+                },
+              ),
               const SizedBox(height: 32),
-              // Wrap the EmergencyButton with a BlocProvider for EmergencyBloc
               BlocProvider(
                 create: (context) => EmergencyBloc(),
                 child: const EmergencyButton(),
