@@ -1,28 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rukunsmart/features/billing/bloc/billing_bloc.dart';
-import 'package:rukunsmart/features/complaint/bloc/complaint_bloc.dart';
-import 'package:rukunsmart/features/emergency/bloc/emergency_bloc.dart';
-import 'package:rukunsmart/features/finance/bloc/finance_bloc.dart';
-import 'package:rukunsmart/features/home/widgets/emergency_button.dart';
-import 'package:rukunsmart/features/news/bloc/news_bloc.dart';
-import 'package:rukunsmart/shared/widgets/region_card.dart';
-import '../../../features/auth/bloc/auth_bloc.dart';
-import '../../../features/news/screens/news_screen.dart';
-import '../../../features/complaint/screens/complaint_screen.dart';
-import '../../../features/billing/screens/billing_screen.dart';
-import '../../../features/finance/screens/finance_screen.dart';
-import '../../../shared/widgets/custom_button.dart';
-import 'package:rukunsmart/features/billing/repositories/billing_repository.dart';
-import 'package:rukunsmart/features/news/repositories/news_repository.dart'; // Add this import
+import 'package:rukunsmart/features/home/widgets/announcement_card.dart';
+import 'package:rukunsmart/features/home/widgets/menu_grid.dart';
+import 'package:rukunsmart/features/home/widgets/region_info_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final billingRepository = RepositoryProvider.of<BillingRepository>(context);
-    final newsRepository = RepositoryProvider.of<NewsRepository>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('RukunSmart'),
@@ -30,86 +15,54 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              context.read<AuthBloc>().add(AuthLogoutRequested());
+              // Handle logout
             },
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const RegionCard(),
-              const SizedBox(height: 16),
-              CustomButton(
-                text: 'Submit Complaint',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => ComplaintBloc(),
-                        child: const ComplaintScreen(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-              CustomButton(
-                text: 'Finance Details',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => FinanceBloc(),
-                        child: const FinanceScreen(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-              CustomButton(
-                text: 'Monthly Bills',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => BillingBloc(billingRepository),
-                        child: const BillingScreen(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 8),
-              CustomButton(
-                text: 'Community News',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => NewsBloc(newsRepository),
-                        child: const NewsScreen(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 32),
-              BlocProvider(
-                create: (context) => EmergencyBloc(),
-                child: const EmergencyButton(),
-              ),
+              AnnouncementCard(),
+              SizedBox(height: 16),
+              RegionInfoCard(),
+              SizedBox(height: 16),
+              MenuGrid(),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, color: Colors.black),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.contact_phone, color: Colors.black),
+            label: 'Contact',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.warning, color: Colors.black),
+            label: 'Emergency',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map, color: Colors.black),
+            label: 'Regions',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.more_horiz, color: Colors.black),
+            label: 'More',
+          ),
+        ],
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          // Handle navigation
+        },
       ),
     );
   }
